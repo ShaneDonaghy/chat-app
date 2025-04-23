@@ -1,15 +1,5 @@
-import {Hono} from 'hono';
-import { logger } from 'hono/logger';
-import { timing} from "hono/timing";
+import {createInMemoryApp} from "./controllers/main";
 
-const app = new Hono();
-
-app.use("*", timing());
-app.use("*", logger());
-
-console.log(Bun.env.TEST);
-console.log(Bun.env.AI);
-
-app.get('/', (c) => c.json({"message": "Hello Hono!"}));
+const app = createInMemoryApp();
 
 export default app;
