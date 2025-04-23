@@ -42,7 +42,7 @@ export function createAuthApp(
             !(await Bun.password.verify(password, fullUser.password))) {
             return c.json({error: ERROR_INVALID_CREDENTIALS}, 401);
         }
-        const { JWT_SECRET } = env<{ JWT_SECRET: string }, typeof c>(c);
+        const {JWT_SECRET} = env<{ JWT_SECRET: string }, typeof c>(c);
         const token = await sign({...fullUser, password: undefined}, JWT_SECRET);
         return c.json({token});
     });

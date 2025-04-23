@@ -43,7 +43,7 @@ export class SimpleInMemoryResource<T extends S & DBEntity, S> implements IDatab
 
     async findAll(data: Partial<T>): Promise<T[]> {
         const res = this.data.filter((x) => {
-            for( const key in data ) {
+            for (const key in data) {
                 if (data[key] != x[key]) return false;
             }
             return true;
@@ -53,8 +53,8 @@ export class SimpleInMemoryResource<T extends S & DBEntity, S> implements IDatab
 
     async update(id: string, data: S): Promise<T | null> {
         const entity = await this.get(id);
-        if(entity) {
-            const newEntity = { ...entity, ...data, updatedAt: Date.now() };
+        if (entity) {
+            const newEntity = {...entity, ...data, updatedAt: Date.now()};
             await this.delete(id);
             this.data.push(newEntity);
             return newEntity;
