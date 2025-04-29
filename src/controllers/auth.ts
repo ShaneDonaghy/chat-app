@@ -1,8 +1,10 @@
 import {Hono} from 'hono';
 import {env} from 'hono/adapter';
 import {sign} from 'hono/jwt';
+import {zValidator} from "@hono/zod-validator";
+import {z} from "zod";
 import type {ContextVariables} from "../constants";
-import type {DBCreateUser, DBUser} from "../models/db";
+import type {DBCreateUser, DBUser, Email} from "../models/db";
 import type {IDatabaseResource} from "../storage/types";
 
 export const AUTH_PREFIX = "/auth/";
@@ -18,8 +20,9 @@ export function createAuthApp(
     userResource: IDatabaseResource<DBUser, DBCreateUser>
 ) {
 
-    authApp.post(REGISTER_ROUTE, async (c) => {
-        const {email, password, name} = await c.req.json();
+    authApp.post(REGISTER_ROUTE, zValidator("json", registerSchema), async (c) => {
+        console.log(c);
+        const {email, password, name} = c.req.valid("json"); // valid means post validation and correct
         if (await userResource.find({email})) {
             return c.json({error: ERROR_USER_ALREADY_EXISTS}, 400);
         }
@@ -31,11 +34,12 @@ export function createAuthApp(
             password: hashedPassword,
             name
         });
+        console.log(c);
         return c.json({success: true});
     });
 
-    authApp.post(LOGIN_ROUTE, async (c) => {
-        const {email, password} = await c.req.json();
+    authApp.post(LOGIN_ROUTE, zValidator("json", loginSchema), async (c) => {
+        const {email, password} = c.req.valid("json");
         const fullUser = await userResource.find({email});
         if (
             !fullUser ||
@@ -48,3 +52,13 @@ export function createAuthApp(
     });
     return authApp;
 }
+
+const registerSchema = z.object({
+    email: z.string().email().transform((x) => x as Email),
+    password: z.string().min(1),
+    name: z.string().min(1),
+});
+const loginSchema = z.object({
+    email: z.string().email().transform((x) => x as Email),
+    password: z.string().min(1),
+});
