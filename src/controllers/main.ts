@@ -4,7 +4,7 @@ import {timing} from "hono/timing";
 import {showRoutes} from "hono/dev";
 import type {ContextVariables} from "../constants";
 import {API_PREFIX} from "../constants";
-import { attachUserId, checkJWTAuth } from "../middlewares/auth";
+import {attachUserId, checkJWTAuth} from "../middlewares/auth";
 import type {
     DBChat,
     DBCreateChat,
@@ -13,12 +13,12 @@ import type {
     DBMessage,
     DBUser
 } from "../models/db";
-import { SimpleInMemoryResource } from "../storage/inmemory";
-import { AUTH_PREFIX, createAuthApp } from "./auth";
-import { CHAT_PREFIX, createChatApp } from "./chat";
+import {SimpleInMemoryResource} from "../storage/inmemory";
+import {AUTH_PREFIX, createAuthApp} from "./auth";
+import {CHAT_PREFIX, createChatApp} from "./chat";
 
 export function createMainApp(authApp: Hono<ContextVariables>, chatApp: Hono<ContextVariables>) {
-    const app  = new Hono<ContextVariables>().basePath(API_PREFIX);
+    const app = new Hono<ContextVariables>().basePath(API_PREFIX);
     app.use("*", logger());
     app.use("*", timing());
     app.use("*", checkJWTAuth);
@@ -31,11 +31,11 @@ export function createMainApp(authApp: Hono<ContextVariables>, chatApp: Hono<Con
     return app;
 }
 
-export function createInMemoryApp(){
+export function createInMemoryApp() {
     return createMainApp(
         createAuthApp(new SimpleInMemoryResource<DBUser, DBCreateUser>()),
         createChatApp(new SimpleInMemoryResource<DBChat, DBCreateChat>(),
             new SimpleInMemoryResource<DBMessage, DBCreateMessage>(),
-    ),
-);
+        ),
+    );
 }

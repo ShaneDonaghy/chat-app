@@ -13,4 +13,3 @@ export type APICreateChat = DBCreateChat;
 export type APIChat = DBChat;
 export type APICreateMessage = DBCreateMessage;
 export type APIMessage = DBMessage;
-
