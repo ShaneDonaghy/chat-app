@@ -5,7 +5,8 @@
     "lint": "npx eslint src"
   },
   "dependencies": {
-    "hono": "latest"
+    "hono": "latest",
+    "pino": "^9.6.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.24.0",
