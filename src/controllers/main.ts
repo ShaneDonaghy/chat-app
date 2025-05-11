@@ -17,6 +17,7 @@ import type {
 import {SimpleInMemoryResource} from "../storage/inmemory";
 import {AUTH_PREFIX, createAuthApp} from "./auth";
 import {CHAT_PREFIX, createChatApp} from "./chat";
+import {rateLimitMiddleware} from "../middlewares/rateLimiting";
 
 const corsOptions = {
     origin: [ Bun.env.CORS_ORIGIN as string ],
@@ -31,6 +32,7 @@ export function createMainApp(authApp: Hono<ContextVariables>, chatApp: Hono<Con
     app.use("*", timing());
     app.use("*", checkJWTAuth);
     app.use("*", attachUserId);
+    app.use("*", rateLimitMiddleware);
     app.use("*", cors(corsOptions));
 
     app.route(AUTH_PREFIX, authApp);
