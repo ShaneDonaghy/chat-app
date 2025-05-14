@@ -18,6 +18,7 @@ import {SimpleInMemoryResource} from "../storage/inmemory";
 import {AUTH_PREFIX, createAuthApp} from "./auth";
 import {CHAT_PREFIX, createChatApp} from "./chat";
 import {rateLimitMiddleware} from "../middlewares/rateLimiting";
+import {cacheMiddleware} from "../middlewares/caching";
 
 const corsOptions = {
     origin: [ Bun.env.CORS_ORIGIN as string ],
@@ -34,6 +35,7 @@ export function createMainApp(authApp: Hono<ContextVariables>, chatApp: Hono<Con
     app.use("*", attachUserId);
     app.use("*", rateLimitMiddleware);
     app.use("*", cors(corsOptions));
+    app.use('*', cacheMiddleware());
 
     app.route(AUTH_PREFIX, authApp);
     app.route(CHAT_PREFIX, chatApp);
