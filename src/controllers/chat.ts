@@ -27,16 +27,21 @@ export function createChatApp(
             name,
             ownerId: userId,
         });
+        c.get("cache").clearPath(c.req.path);
         return c.json({data})
     });
     chatApp.get(CHAT_ROUTE, async (c) => {
         const userId = c.get("userId");
         const data = await chatResource.findAll({ownerId: userId});
+        const res = { data };
+        c.get("cache").cache(res);
         return c.json({data});
     });
     chatApp.get(CHAT_MESSAGES_ROUTE, zValidator("param", idSchema), async (c) => {
         const chatId = c.req.valid("param");
         const data = await messageResource.findAll(chatId);
+        const res = { data };
+        c.get("cache").cache(res);
         return c.json({data});
     });
     chatApp.post(CHAT_MESSAGES_ROUTE, zValidator("param", idSchema), zValidator("json", messageSchema), async (c) => {
@@ -52,6 +57,7 @@ export function createChatApp(
             type: "system",
         };
         const data = await messageResource.create(responseMessage);
+        c.get("cache").clearPath(c.req.path);
         return c.json({data});
     });
     return chatApp;
