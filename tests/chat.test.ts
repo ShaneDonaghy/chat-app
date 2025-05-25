@@ -1,11 +1,14 @@
 import {beforeEach, describe, expect, test} from "bun:test";
-import {createInMemoryApp} from "../src/controllers/main";
+import {createSQLApp} from "../src/controllers/main";
+import {resetSQLDB} from "./utils";
+import {Pool} from "pg";
 
 describe('chat tests', () => {
-    let app = createInMemoryApp();
+    let app = createSQLApp();
+    const pool = new Pool({connectionString: Bun.env.DB_URL});
 
     beforeEach(async () => {
-        app = createInMemoryApp();
+        await resetSQLDB(pool);
     });
 
     async function getToken(email = "test@test.com"): Promise<string> {

@@ -19,6 +19,10 @@ import {AUTH_PREFIX, createAuthApp} from "./auth";
 import {CHAT_PREFIX, createChatApp} from "./chat";
 import {rateLimitMiddleware} from "../middlewares/rateLimiting";
 import {cacheMiddleware} from "../middlewares/caching";
+import { Pool } from 'pg';
+import { UserSqlResource } from "../storage/sql/user";
+import { ChatSqlResource } from "../storage/sql/chat";
+import { MessageSqlResource } from "../storage/sql/message";
 
 const corsOptions = {
     origin: [ Bun.env.CORS_ORIGIN as string ],
@@ -26,6 +30,16 @@ const corsOptions = {
     allowHeaders: [ "Authorization", "Content-Type" ],
     maxAge: 86400,
 };
+
+export function createSQLApp() {
+    const pool = new Pool({
+        connectionString: Bun.env.DB_URL,
+    });
+    return createMainApp(
+        createAuthApp(new UserSqlResource(pool)),
+        createChatApp(new ChatSqlResource(pool), new MessageSqlResource(pool)),
+    );
+}
 
 export function createMainApp(authApp: Hono<ContextVariables>, chatApp: Hono<ContextVariables>) {
     const app = new Hono<ContextVariables>().basePath(API_PREFIX);
@@ -52,3 +66,4 @@ export function createInMemoryApp() {
         ),
     );
 }
+
