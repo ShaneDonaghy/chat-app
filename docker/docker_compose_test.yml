@@ -4,10 +4,10 @@ services:
     restart: always
     environment:
       POSTGRES_DB: test
-      POSTGRES_USER: test
+      POSTGRES_USER: test@test.com
       POSTGRES_PASSWORD: test
     ports:
-      - "5433:5432"
+      - "5432:5432"
     networks:
       - local
     volumes:

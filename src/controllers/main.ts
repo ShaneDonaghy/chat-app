@@ -5,39 +5,32 @@ import {showRoutes} from "hono/dev";
 import type {ContextVariables} from "../constants";
 import {API_PREFIX} from "../constants";
 import {attachUserId, checkJWTAuth} from "../middlewares/auth";
-import { cors } from "hono/cors";
-import type {
-    DBChat,
-    DBCreateChat,
-    DBCreateMessage,
-    DBCreateUser,
-    DBMessage,
-    DBUser
-} from "../models/db";
-import {SimpleInMemoryResource} from "../storage/inmemory";
+import {cors} from "hono/cors";
 import {AUTH_PREFIX, createAuthApp} from "./auth";
 import {CHAT_PREFIX, createChatApp} from "./chat";
 import {rateLimitMiddleware} from "../middlewares/rateLimiting";
 import {cacheMiddleware} from "../middlewares/caching";
-import { Pool } from 'pg';
-import { UserSqlResource } from "../storage/sql/user";
-import { ChatSqlResource } from "../storage/sql/chat";
-import { MessageSqlResource } from "../storage/sql/message";
+import {
+    UserDBResource,
+    ChatDBResource,
+    MessageDBResource
+} from "../storage/orm";
+import {PrismaClient} from "@prisma/client";
 
 const corsOptions = {
-    origin: [ Bun.env.CORS_ORIGIN as string ],
-    allowMethods: [ "GET", "POST", "PUT", "DELETE", "PATCH" ],
-    allowHeaders: [ "Authorization", "Content-Type" ],
+    origin: [Bun.env.CORS_ORIGIN as string],
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowHeaders: ["Authorization", "Content-Type"],
     maxAge: 86400,
 };
 
-export function createSQLApp() {
-    const pool = new Pool({
-        connectionString: Bun.env.DB_URL,
-    });
+export function createPrismaApp() {
+    const prisma = new PrismaClient();
+    prisma.$connect();
     return createMainApp(
-        createAuthApp(new UserSqlResource(pool)),
-        createChatApp(new ChatSqlResource(pool), new MessageSqlResource(pool)),
+        createAuthApp(new UserDBResource(prisma)),
+        createChatApp(new ChatDBResource(prisma),
+            new MessageDBResource(prisma))
     );
 }
 
@@ -58,12 +51,4 @@ export function createMainApp(authApp: Hono<ContextVariables>, chatApp: Hono<Con
     return app;
 }
 
-export function createInMemoryApp() {
-    return createMainApp(
-        createAuthApp(new SimpleInMemoryResource<DBUser, DBCreateUser>()),
-        createChatApp(new SimpleInMemoryResource<DBChat, DBCreateChat>(),
-            new SimpleInMemoryResource<DBMessage, DBCreateMessage>(),
-        ),
-    );
-}
 

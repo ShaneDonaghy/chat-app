@@ -1,5 +1,5 @@
-import { createSQLApp } from "./controllers/main";
+import { createPrismaApp } from "./controllers/main";
 
-const app = createSQLApp();
+const app = createPrismaApp();
 
 export default app;

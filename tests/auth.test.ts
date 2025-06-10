@@ -1,14 +1,15 @@
 import {beforeEach, describe, expect, test} from 'bun:test';
-import {createSQLApp} from "../src/controllers/main";
-import {resetSQLDB} from "./utils";
-import {Pool} from "pg";
+import {createPrismaApp} from "../src/controllers/main";
+import {resetORMDB} from "./utils";
+import {PrismaClient} from "@prisma/client";
 
 describe('Auth', () => {
     let accessToken: string;
-    let app = createSQLApp();
-    const pool = new Pool({ connectionString: Bun.env.DB_URL});
+    let app = createPrismaApp();
+    const prisma = new PrismaClient();
+
     beforeEach(async () => {
-        // await resetSQLDB(pool);
+        await resetORMDB(prisma);
     });
 
     test("POST /register (positive)", async () => {
@@ -107,6 +108,7 @@ describe('Auth', () => {
             headers: {
                 "Content-Type": "application/json",
             },
+            body: JSON.stringify(jsonBody)
         });
         expect(response.status).toBe(400);
     });
@@ -122,6 +124,7 @@ describe('Auth', () => {
             headers: {
                 "Content-Type": "application/json",
             },
+            body: JSON.stringify(jsonBody)
         });
         expect(response.status).toBe(400);
     });
@@ -137,6 +140,7 @@ describe('Auth', () => {
             headers: {
                 "Content-Type": "application/json",
             },
+            body: JSON.stringify(jsonBody)
         });
         expect(response.status).toBe(400);
     });
