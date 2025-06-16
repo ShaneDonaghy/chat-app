@@ -9,6 +9,7 @@ import type {
 import type {IDatabaseResource} from "../storage/types";
 import {z} from "zod";
 import {zValidator} from "@hono/zod-validator";
+import { generateMessageResponse } from "../integrations/generate_message";
 
 export const CHAT_PREFIX = "/chat/";
 export const CHAT_ROUTE = "";
@@ -51,10 +52,12 @@ export function createChatApp(
             message, chatId, type: "system"
         };
         await messageResource.create(userMessage);
+        const allMessages = await messageResource.findAll({chatId});
+        const response = await generateMessageResponse(allMessages);
         const responseMessage: DBCreateMessage = {
-            message: "dummy response",
+            message: response,
             chatId,
-            type: "system",
+            type: "user",
         };
         const data = await messageResource.create(responseMessage);
         c.get("cache").clearPath(c.req.path);

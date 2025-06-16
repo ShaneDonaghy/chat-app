@@ -1,7 +1,7 @@
 import {callGPTAPI} from "./api";
 import {retryWrapper} from "./retry";
 import {validateGPTResponse} from "./validation";
-import {HTTPException} from "hono/dist/types/http-exception";
+import {HTTPException} from "hono/http-exception";
 
 export async function getGPTAnswer(data: object){
     try {
