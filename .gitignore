@@ -5,3 +5,4 @@ docker/pgadmin-data
 .env
 .env.dev
 .env.test
+.env.secrets
