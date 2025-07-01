@@ -1,4 +1,4 @@
-import {beforeEach, describe, expect, test} from "bun:test";
+import {afterAll, describe, expect, test} from "bun:test";
 import {createPrismaApp} from "../src/controllers/main";
 import {resetORMDB} from "./utils";
 import {PrismaClient} from "@prisma/client";
@@ -7,7 +7,7 @@ describe('chat tests', () => {
     let app = createPrismaApp();
     const prisma = new PrismaClient();
 
-    beforeEach(async () => {
+    afterAll(async () => {
         await resetORMDB(prisma);
     });
 
