@@ -31,6 +31,7 @@ export function createChatApp(
         c.get("cache").clearPath(c.req.path);
         return c.json({data})
     });
+    // Get Chats
     chatApp.get(CHAT_ROUTE, async (c) => {
         const userId = c.get("userId");
         const data = await chatResource.findAll({ownerId: userId});
@@ -38,30 +39,26 @@ export function createChatApp(
         c.get("cache").cache(res);
         return c.json({data});
     });
+    // Get Messages in Chat
     chatApp.get(CHAT_MESSAGES_ROUTE, zValidator("param", idSchema), async (c) => {
         const chatId = c.req.valid("param");
-        const data = await messageResource.findAll(chatId);
+        const data = await messageResource.findAll({chatId: chatId.id});
         const res = { data };
         c.get("cache").cache(res);
         return c.json({data});
     });
+    // Send Message
     chatApp.post(CHAT_MESSAGES_ROUTE, zValidator("param", idSchema), zValidator("json", messageSchema), async (c) => {
         const {id: chatId} = c.req.valid("param");
+        console.log(`ID from send message: ${chatId}`);
         const { message } = c.req.valid("json");
         const userMessage: DBCreateMessage = {
             message, chatId, type: "system"
         };
         await messageResource.create(userMessage);
-        const allMessages = await messageResource.findAll({chatId});
-        const response = await generateMessageResponse(allMessages);
-        const responseMessage: DBCreateMessage = {
-            message: response,
-            chatId,
-            type: "user",
-        };
-        const data = await messageResource.create(responseMessage);
+        const allMessages: DBMessage[] = await messageResource.findAll({chatId: chatId});
         c.get("cache").clearPath(c.req.path);
-        return c.json({data});
+        return c.json({allMessages});
     });
     return chatApp;
 }
