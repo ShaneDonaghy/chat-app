@@ -3,7 +3,7 @@
     import {navigate} from 'svelte-routing';
     import '../styles/chat.css';
     import {authToken} from '../stores/auth';
-    import ChatListsSideBar from '';
+    import ChatListsSideBar from '../components/ChatListSideBar.svelte';
     import ChatDetails from '';
     import Header from '';
 
