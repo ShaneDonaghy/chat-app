@@ -6,3 +6,4 @@ docker/pgadmin-data
 .env.dev
 .env.test
 .env.secrets
+.DS_Store
