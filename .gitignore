@@ -3,7 +3,5 @@ node_modules
 data
 docker/pgadmin-data
 .env
-.env.dev
-.env.test
-.env.secrets
+.env.*
 .DS_Store
