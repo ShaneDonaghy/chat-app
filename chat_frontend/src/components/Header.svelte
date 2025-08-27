@@ -10,7 +10,7 @@
         navigate('/login');
     }
 </script>
-<div vlass="header">
+<div class="header">
     <div class="user-name">{name}</div>
     <button class="logout-button" on:click={logout}>
         Log Ooot

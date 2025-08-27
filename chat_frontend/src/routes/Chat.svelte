@@ -4,8 +4,8 @@
     import '../styles/chat.css';
     import {authToken} from '../stores/auth';
     import ChatListsSideBar from '../components/ChatListSideBar.svelte';
-    import ChatDetails from '';
-    import Header from '';
+    import ChatDetails from '../components/ChatDetails.svelte';
+    import Header from '../components/Header.svelte';
 
     export let chatId: string | null; // allows it to be passed as prop
 

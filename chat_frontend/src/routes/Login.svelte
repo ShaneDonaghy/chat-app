@@ -2,7 +2,7 @@
     import {onMount} from 'svelte';
     import {navigate} from 'svelte-routing';
     import axios from 'axios';
-    // import '../styles/auth.css';
+    import '../styles/auth.css';
     import {authToken} from '../stores/auth';
     import {API_HOST} from "../constants";
 

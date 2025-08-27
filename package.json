@@ -2,6 +2,7 @@
   "type": "module",
   "scripts": {
     "dev:be": "bun run --hot src/index.ts",
+    "migrate:be": "npx prisma migrate dev",
     "dev:fe": "vite dev",
     "test": "bun test ./tests/auth.test.ts --env-file .env.test",
     "lint": "npx eslint src"
@@ -18,6 +19,7 @@
     "pino": "^9.6.0",
     "prisma": "^6.8.2",
     "svelte": "^5.34.4",
+    "uuid": "^11.1.0",
     "vite": "^7.0.0"
   },
   "devDependencies": {
