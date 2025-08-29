@@ -18,8 +18,8 @@ import {
 import {PrismaClient} from "@prisma/client";
 
 const corsOptions = {
-    origin: [Bun.env.CORS_ORIGIN as string],
-    allowMethods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    origin: [Bun.env.CORS_ORIGIN as string, "localhost:3000", ],
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowHeaders: ["Authorization", "Content-Type"],
     maxAge: 86400,
 };
