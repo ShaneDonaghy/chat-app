@@ -49,7 +49,7 @@
         <div class="error">{errorMessage}</div>
     {/if}
     <ul>
-        {#each messages as message (message.id) }
+        {#each messages as message (message.id)}
             <li>
                 {message.message}
                 <span>{new Date(message.createdAt).toLocaleTimeString()}</span>
