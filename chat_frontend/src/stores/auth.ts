@@ -3,7 +3,7 @@ import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 
 interface TokenPayload {
-    name: string
+    name: string;
 }
 
 function setAxiosAuth(token: string) {
