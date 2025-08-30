@@ -5,6 +5,7 @@
     import '../styles/chatDetails.css';
 
     export let chatId: string;
+    export let messagesList: HTMLUListElement | null = null;
 
     let messages: { message: string, createdAt: number }[] = [];
     let newMessage = "";
@@ -14,6 +15,12 @@
     onMount(async () => {
         await loadMessages();
     });
+
+    function scrollToEndOfChatDetailsWindow() {
+        if (messagesList) {
+            messagesList.scrollTop = messagesList.scrollHeight;
+        }
+    }
 
     async function loadMessages() {
         try {
@@ -34,7 +41,10 @@
             errorMessage = "Failed to send message. Please try again."
             console.error(`Failed to send Message: ${error}`);
         }
+        newMessage = "";
+        await loadMessages();
         isLoading = false;
+        scrollToEndOfChatDetailsWindow();
     }
 
     $: {
@@ -48,7 +58,7 @@
     {#if errorMessage}
         <div class="error">{errorMessage}</div>
     {/if}
-    <ul>
+    <ul bind:this={messagesList}>
         {#each messages as message (message.id)}
             <li>
                 {message.message}
