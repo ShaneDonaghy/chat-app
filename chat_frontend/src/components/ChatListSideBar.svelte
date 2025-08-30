@@ -57,7 +57,7 @@
     {/if}
     <div class="chat-list">
         {#each chats as chat (chat.id)}
-            <div class="class-list-item" class:selected={chat.id === chatId}
+            <div class="chat-list-item" class:selected={chat.id === chatId}
                  on:click={() => selectChat(chat.id)}>
                 {chat.name}
             </div>

@@ -6,6 +6,15 @@
     overflow-y: auto;
 }
 
+.chat-list-item {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 3px;
+    margin: 5px;
+}
+
 .chat-list li {
     padding: 15px;
     border-bottom: 1px solid #ddd;
@@ -26,7 +35,7 @@
     width: 100%;
 }
 
-.chat-list li:hover {
+.chat-list-item li:hover {
     background-color: #579ae8;
     color: white;
 }
